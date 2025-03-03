@@ -1,0 +1,16 @@
+@use "variables.scss";
+
+.input-text {
+    font-size: 16px;
+    padding: 5px;
+    border: none;
+    border-bottom: 1px solid variables.$border-color;
+
+    &:focus {
+        border-bottom: 1px solid variables.$border-focused;
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+}

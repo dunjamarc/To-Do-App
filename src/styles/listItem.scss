@@ -1,0 +1,41 @@
+@use "variables";
+
+.list-item {
+  border-bottom: 1px solid variables.$border-color;
+  margin: 10px;
+  display: flex;
+
+  .item-title {
+    width: 100%;
+    min-width: 0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+
+    input {
+      width: 20px;
+      height: 20px;
+      margin: 10px;
+      flex-shrink: 0;
+    }
+
+    .label {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      margin: 0;
+    }
+  }
+
+  svg {
+    margin: auto 10px;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+
+    &:hover {
+      background-color: variables.$button-color;
+    }
+  }
+}

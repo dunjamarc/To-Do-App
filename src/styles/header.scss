@@ -1,0 +1,23 @@
+@use "mixins.scss";
+@use "variables.scss";
+
+.header {
+  text-align: left;
+
+  h2 {
+    margin-left: 10px;
+  }
+
+  .add-new {
+    margin: 10px 40px 10px auto;
+    font-size: 26px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+    display: block;
+
+    &:hover {
+      background-color: variables.$button-color;
+    }
+  }
+}

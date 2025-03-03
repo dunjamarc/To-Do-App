@@ -1,0 +1,28 @@
+@use "variables.scss";
+@use "header.scss";
+@use "listItem.scss";
+@use "inputText.scss";
+@use "mixins.scss";
+
+.cta-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+#root {
+  @include mixins.breakpoint(medium) {
+    padding: 5px !important;
+  }
+}
+
+.add-new-item {
+  .select-category,
+  option {
+    margin: 15px 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    padding: 5px;
+    width: 100%;
+  }
+}
