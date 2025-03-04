@@ -7,7 +7,9 @@ import { ModalProvider } from "./contexts/ModalContext";
 const API_URL = "https://jsonplaceholder.typicode.com/todos";
 
 function App() {
+  const [allTasks, setAllTasks] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [currentFilter, setCurrentFilter] = useState("all");
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -18,6 +20,7 @@ function App() {
         }
         const data = await response.json();
         setTasks(data);
+        setAllTasks(data);
       } catch (error) {
         console.error("Error fetching todos:", error);
       }
@@ -26,7 +29,12 @@ function App() {
   }, []);
 
   const addTask = async (formData) => {
-    const newTask = { id: Date.now(), title: formData.title, completed: false, category: formData.category };
+    const newTask = {
+      id: Date.now(),
+      title: formData.title,
+      completed: false,
+      category: formData.category,
+    };
     try {
       const response = await fetch(API_URL, {
         method: "POST",
@@ -37,7 +45,12 @@ function App() {
         throw new Error("Failed to add task");
       }
       const data = await response.json();
-      setTasks((prevTasks) => [{ ...data, id: newTask.id }, ...prevTasks]); // functional update pattern
+      setAllTasks((prevTasks) => {
+        // functional update pattern
+        const updatedTasks = [{ ...data, id: newTask.id }, ...prevTasks];
+        applyFilter(updatedTasks, currentFilter);
+        return updatedTasks;
+      });
     } catch (error) {
       console.error("Error adding task:", error);
     }
@@ -53,12 +66,13 @@ function App() {
       if (!response.ok) {
         throw new Error("Failed to update task");
       }
-
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
+      setAllTasks((prevTasks) => {
+        const updatedTasks = prevTasks.map((task) =>
           task.id === id ? { ...task, ...updateField } : task
-        )
-      );
+        );
+        applyFilter(updatedTasks, currentFilter);
+        return updatedTasks;
+      });
     } catch (error) {
       console.error("Error updating task:", error);
     }
@@ -70,21 +84,36 @@ function App() {
       if (!response.ok) {
         throw new Error("Failed to delete task");
       }
-
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+      setAllTasks((prevTasks) => {
+        const updatedTasks = prevTasks.filter((task) => task.id !== id);
+        applyFilter(updatedTasks, currentFilter);
+        return updatedTasks;
+      });
     } catch (error) {
       console.error("Error deleting task:", error);
     }
   };
 
+  const applyFilter = (taskList, category) => {
+    if (category === "all") {
+      setTasks(taskList);
+    } else {
+      const filtered = taskList.filter(
+        (task) => Object.hasOwn(task, "category") && task.category === category
+      );
+      setTasks(filtered);
+    }
+  };
+
+  const filterTasks = (category) => {
+    setCurrentFilter(category);
+    applyFilter(allTasks, category);
+  };
+
   return (
     <ModalProvider>
-      <Header addTask={addTask}></Header>
-      <ToDoList
-        tasks={tasks}
-        editTask={editTask}
-        deleteTask={deleteTask}
-      />
+      <Header addTask={addTask} filterTasks={filterTasks}></Header>
+      <ToDoList tasks={tasks} editTask={editTask} deleteTask={deleteTask} />
     </ModalProvider>
   );
 }
