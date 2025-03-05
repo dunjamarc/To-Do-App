@@ -1,7 +1,5 @@
 import React, {
   forwardRef,
-  useImperativeHandle,
-  useRef,
   useState,
 } from "react";
 
@@ -17,18 +15,7 @@ const InputText = forwardRef(
     },
     ref
   ) => {
-    const localRef = useRef(null);
     const [inputValue, setInputValue] = useState(value || "");
-
-    useImperativeHandle(ref, () => ({
-      clear: () => {
-        setInputValue("");
-        if (localRef.current) {
-          localRef.current.value = "";
-        }
-      },
-      getValue: () => (localRef.current ? localRef.current.value : ""),
-    }));
 
     const handleChange = (e) => {
       setInputValue(e.target.value);
@@ -41,7 +28,7 @@ const InputText = forwardRef(
       <>
         <label htmlFor="name">{labelText}</label>
         <input
-          ref={localRef}
+          ref={ref}
           value={value !== undefined ? value : inputValue}
           onChange={(e) => handleChange(e)}
           className="input-text"

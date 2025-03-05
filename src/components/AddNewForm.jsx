@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import InputText from "./InputText";
 
 const categories = ["Work", "Personal", "Shopping", "Other"];
 
 const AddNewForm = ({ onDataChange }) => {
   const [formData, setFormData] = useState({ title: "", category: "" });
+  const inputRef = useRef(null);
 
   useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus(); // Focus input when form renders inside modal
+    }
     onDataChange(formData);
   }, [formData, onDataChange]);
 
@@ -19,6 +23,7 @@ const AddNewForm = ({ onDataChange }) => {
   return (
     <div className="add-new-item">
       <InputText
+        ref={inputRef}
         value={formData.title}
         onChange={handleChange}
         name="title"
