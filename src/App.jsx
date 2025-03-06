@@ -10,6 +10,8 @@ function App() {
   const [allTasks, setAllTasks] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [currentFilter, setCurrentFilter] = useState("all");
+  const [pageCounter, setPageCounter] = useState(2);
+  const [hasMoreItems, setHasMoreItems] = useState(true);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -110,10 +112,41 @@ function App() {
     applyFilter(allTasks, category);
   };
 
+  const loadMoreItems = () => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}?_page=${pageCounter}&_limit=10`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch tasks");
+        }
+        const data = await response.json();
+
+        if (data.length === 0) {
+          setHasMoreItems(false);
+          return;
+        }
+
+        setTasks((prevTasks) => [...prevTasks, ...data]);
+        setAllTasks((prevTasks) => [...prevTasks, ...data]);
+        setPageCounter((prevPage) => prevPage + 1);
+      } catch (error) {
+        console.error("Error fetching todos:", error);
+      }
+    };
+    fetchTasks();
+  };
+
   return (
     <ModalProvider>
       <Header addTask={addTask} filterTasks={filterTasks}></Header>
       <ToDoList tasks={tasks} editTask={editTask} deleteTask={deleteTask} />
+      {hasMoreItems && (
+        <button className="more-items" onClick={loadMoreItems}>
+          More Items
+        </button>
+      )}
     </ModalProvider>
   );
 }

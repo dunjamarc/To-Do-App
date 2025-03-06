@@ -1,5 +1,5 @@
 import React from "react";
-import AddNewForm from "./AddNewForm";
+import AddNewForm from "./common/AddNewForm";
 import { SlPlus } from "react-icons/sl";
 import { useModal } from "../contexts/ModalContext";
 

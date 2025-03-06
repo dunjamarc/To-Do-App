@@ -1,7 +1,7 @@
 import React from "react";
 import { SlPencil, SlTrash } from "react-icons/sl";
 import { useModal } from "../contexts/ModalContext";
-import AddNewForm from "./AddNewForm";
+import AddNewForm from "./common/AddNewForm";
 
 const ListItem = ({ task, editTask, deleteTask }) => {
   const { openModal, openModalForm } = useModal();
