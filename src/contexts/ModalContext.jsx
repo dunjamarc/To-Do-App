@@ -11,7 +11,7 @@ export const ModalProvider = ({ children }) => {
     confirmText: "OK",
   });
 
-  const openModalForm = (RenderComponent, onConfirm, confirmText = "OK") => {
+  const openModalForm = (task, RenderComponent, onConfirm, confirmText = "OK") => {
     let formData = {};
 
     const handleDataChange = (data) => {
@@ -20,7 +20,7 @@ export const ModalProvider = ({ children }) => {
 
     setModalData({
       isOpen: true,
-      content:  <RenderComponent onDataChange={handleDataChange} />,
+      content:  <RenderComponent task={task} onDataChange={handleDataChange} />,
       onConfirm: () => {
         onConfirm(formData);
         closeModal();

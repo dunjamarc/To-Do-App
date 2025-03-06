@@ -1,26 +1,26 @@
 import React from "react";
 import { SlPencil, SlTrash } from "react-icons/sl";
 import { useModal } from "../contexts/ModalContext";
+import AddNewForm from "./AddNewForm";
 
 const ListItem = ({ task, editTask, deleteTask }) => {
-  const { openModal } = useModal();
+  const { openModal, openModalForm } = useModal();
 
   const onToggleChecked = () => {
     editTask(task.id, { completed: !task.completed });
   };
 
   const onEditTask = () => {
-    openModal(
-      <input
-        className="input-text"
-        type="text"
-        defaultValue={task.title}
-        onChange={(e) => (task.title = e.target.value)}
-        minLength={3}
-        maxLength={35}
-        size={32}
-      />,
-      () => editTask(task.id, { title: task.title }),
+    openModalForm(
+      task,
+      (props) => <AddNewForm {...props} />,
+      (formData) => {
+        if (!formData.title.trim() || !formData.category.trim()) {
+          alert("All fields are required");
+          return;
+        }
+        editTask(task.id, formData);
+      },
       "Save"
     );
   };

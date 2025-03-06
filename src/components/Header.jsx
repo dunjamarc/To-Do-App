@@ -10,6 +10,7 @@ const Header = ({ addTask, filterTasks }) => {
 
   const handleOpenModal = () => {
     openModalForm(
+      null,
       (props) => <AddNewForm {...props} />,
       (formData) => {
         if (!formData.title.trim() || !formData.category.trim()) {
@@ -26,9 +27,15 @@ const Header = ({ addTask, filterTasks }) => {
     <div className="header">
       <h2>TO DO:</h2>
       <div className="filter">
-        <button className="category-filter" onClick={() => filterTasks('all')}>All</button>
+        <button className="category-filter" onClick={() => filterTasks("all")}>
+          All
+        </button>
         {categories.map((cat, i) => (
-          <button key={i} className="category-filter" onClick={() => filterTasks(cat)}>
+          <button
+            key={i}
+            className="category-filter"
+            onClick={() => filterTasks(cat)}
+          >
             {cat}
           </button>
         ))}
