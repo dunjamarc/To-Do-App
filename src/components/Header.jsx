@@ -4,8 +4,14 @@ import { SlPlus } from "react-icons/sl";
 import { useModal } from "../contexts/ModalContext";
 
 const categories = ["Work", "Personal", "Shopping", "Other"];
+const sortOptions = [
+  { name: "Incomplete First", value: "completed asc" },
+  { name: "Completed First", value: "completed desc" },
+  { name: "A-Z", value: "title asc" },
+  { name: "Z-A", value: "title desc" },
+];
 
-const Header = ({ addTask, filterTasks }) => {
+const Header = ({ addTask, filterTasks, sortTasks }) => {
   const { openModalForm } = useModal();
 
   const handleOpenModal = () => {
@@ -21,6 +27,10 @@ const Header = ({ addTask, filterTasks }) => {
       },
       "Add Task"
     );
+  };
+
+  const handleSort = (e) => {
+    sortTasks(e.target.value);
   };
 
   return (
@@ -40,7 +50,17 @@ const Header = ({ addTask, filterTasks }) => {
           </button>
         ))}
       </div>
-      <SlPlus className="add-new" title="Add new" onClick={handleOpenModal} />
+      <div className="sort-add-new">
+        <select className="sort" name="sort" onChange={handleSort}>
+          <option value="">Sort By</option>
+          {sortOptions.map((option, i) => (
+            <option key={i} value={option.value}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+        <SlPlus className="add-new" title="Add new" onClick={handleOpenModal} />
+      </div>
     </div>
   );
 };

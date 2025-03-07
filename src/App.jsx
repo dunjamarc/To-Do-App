@@ -10,25 +10,37 @@ function App() {
   const [allTasks, setAllTasks] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [currentFilter, setCurrentFilter] = useState("all");
-  const [pageCounter, setPageCounter] = useState(2);
+  const [pageCounter, setPageCounter] = useState(1);
   const [hasMoreItems, setHasMoreItems] = useState(true);
+  const [sortBy, setSortBy] = useState("title");
+  const [order, setOrder] = useState("asc");
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await fetch(API_URL + "?_limit=10");
-        if (!response.ok) {
-          throw new Error("Failed to fetch tasks");
-        }
-        const data = await response.json();
-        setTasks(data);
-        setAllTasks(data);
-      } catch (error) {
-        console.error("Error fetching todos:", error);
+    setPageCounter(1);
+    fetchTasks(1, false);
+  }, [sortBy, order]);
+
+  const fetchTasks = async (page = 1, append = false) => {
+    try {
+      const response = await fetch(
+        `${API_URL}?_page=${page}&_limit=10&_sort=${sortBy}&_order=${order}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch tasks");
       }
-    };
-    fetchTasks();
-  }, []);
+      const data = await response.json();
+
+      if (data.length === 0) {
+        setHasMoreItems(false);
+        return;
+      }
+
+      setTasks((prevTasks) => (append ? [...prevTasks, ...data] : data));
+      setAllTasks((prevTasks) => (append ? [...prevTasks, ...data] : data));
+    } catch (error) {
+      console.error("Error fetching todos:", error);
+    }
+  };
 
   const addTask = async (formData) => {
     const newTask = {
@@ -112,35 +124,28 @@ function App() {
     applyFilter(allTasks, category);
   };
 
+  const sortTasks = (option) => {
+    const [sorted, sortOrder] = option.split(" ");
+    if (sorted === sortBy && sortOrder === order) {
+      return;
+    }
+    setTasks([]);
+    setSortBy(sorted);
+    setOrder(sortOrder);
+  };
+
   const loadMoreItems = () => {
-    const fetchTasks = async () => {
-      try {
-        const response = await fetch(
-          `${API_URL}?_page=${pageCounter}&_limit=10`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch tasks");
-        }
-        const data = await response.json();
-
-        if (data.length === 0) {
-          setHasMoreItems(false);
-          return;
-        }
-
-        setTasks((prevTasks) => [...prevTasks, ...data]);
-        setAllTasks((prevTasks) => [...prevTasks, ...data]);
-        setPageCounter((prevPage) => prevPage + 1);
-      } catch (error) {
-        console.error("Error fetching todos:", error);
-      }
-    };
-    fetchTasks();
+    setPageCounter((prev) => prev + 1);
+    fetchTasks(pageCounter + 1, true);
   };
 
   return (
     <ModalProvider>
-      <Header addTask={addTask} filterTasks={filterTasks}></Header>
+      <Header
+        addTask={addTask}
+        filterTasks={filterTasks}
+        sortTasks={sortTasks}
+      ></Header>
       <ToDoList tasks={tasks} editTask={editTask} deleteTask={deleteTask} />
       {hasMoreItems && (
         <button className="more-items" onClick={loadMoreItems}>

@@ -9,22 +9,37 @@
   }
 
   .filter {
+    display: flex;
+    overflow: auto;
+    padding-bottom: 5px;
+
     .category-filter {
       margin: 5px 0 0 10px;
       background-color: variables.$filter-color;
     }
   }
 
-  .add-new {
-    margin: 10px 40px 10px auto;
-    font-size: 26px;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 3px;
-    display: block;
+  .sort-add-new {
+    display: flex;
 
-    &:hover {
-      background-color: variables.$button-color;
+    .sort {
+      margin: 10px auto 0 10px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .add-new {
+      margin: 10px 40px 10px auto;
+      font-size: 26px;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 3px;
+      display: block;
+
+      &:hover {
+        background-color: variables.$button-color;
+      }
     }
   }
 }
