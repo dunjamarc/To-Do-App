@@ -1,7 +1,8 @@
 import React from "react";
 import ListItem from "./ListItem";
+import { ClipLoader } from "react-spinners";
 
-const ToDoList = ({ tasks, editTask, deleteTask }) => {
+const ToDoList = ({ tasks, editTask, deleteTask, loading }) => {
 
   return (
     <div>
@@ -13,6 +14,10 @@ const ToDoList = ({ tasks, editTask, deleteTask }) => {
           deleteTask={deleteTask}
         ></ListItem>
       ))}
+      <ClipLoader
+        loading={loading}
+        aria-label="Loading Spinner"
+      />
     </div>
   );
 };

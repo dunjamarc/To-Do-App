@@ -14,6 +14,7 @@ function App() {
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [sortBy, setSortBy] = useState("title");
   const [order, setOrder] = useState("asc");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setPageCounter(1);
@@ -21,6 +22,7 @@ function App() {
   }, [sortBy, order]);
 
   const fetchTasks = async (page = 1, append = false) => {
+    setLoading(true);
     try {
       const response = await fetch(
         `${API_URL}?_page=${page}&_limit=10&_sort=${sortBy}&_order=${order}`
@@ -39,6 +41,8 @@ function App() {
       setAllTasks((prevTasks) => (append ? [...prevTasks, ...data] : data));
     } catch (error) {
       console.error("Error fetching todos:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -146,8 +150,13 @@ function App() {
         filterTasks={filterTasks}
         sortTasks={sortTasks}
       ></Header>
-      <ToDoList tasks={tasks} editTask={editTask} deleteTask={deleteTask} />
-      {hasMoreItems && (
+      <ToDoList
+        tasks={tasks}
+        editTask={editTask}
+        deleteTask={deleteTask}
+        loading={loading}
+      />
+      {hasMoreItems && !loading && (
         <button className="more-items" onClick={loadMoreItems}>
           More Items
         </button>
