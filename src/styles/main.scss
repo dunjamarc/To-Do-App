@@ -3,6 +3,7 @@
 @use "listItem.scss";
 @use "inputText.scss";
 @use "mixins.scss";
+@use "darkTheme.scss";
 
 .cta-buttons {
   display: flex;
@@ -16,13 +17,15 @@
   }
 }
 
+.select-dropdown {
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 7px 7px 7px 0;
+}
+
 .add-new-item {
-  .select-category,
-  option {
-    margin: 15px 0;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
-    padding: 5px;
-    width: 100%;
+  input {
+    margin-bottom: 10px;
   }
 }

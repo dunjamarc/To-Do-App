@@ -42,7 +42,7 @@ const AddNewForm = ({ onDataChange, task }) => {
         labelText={task ? "" : "Add new:"}
       ></InputText>
       <select
-        className="select-category"
+        className="select-dropdown"
         value={formData.category}
         name="category"
         onChange={handleChange}

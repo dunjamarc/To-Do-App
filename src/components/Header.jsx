@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import AddNewForm from "./common/AddNewForm";
 import { SlPlus } from "react-icons/sl";
 import { useModal } from "../contexts/ModalContext";
+import { ThemeContext } from "../contexts/ThemeContext";
+import Switch from "react-switch";
 
 const categories = ["Work", "Personal", "Shopping", "Other"];
 const sortOptions = [
@@ -13,6 +15,7 @@ const sortOptions = [
 
 const Header = ({ addTask, filterTasks, sortTasks }) => {
   const { openModalForm } = useModal();
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   const handleOpenModal = () => {
     openModalForm(
@@ -35,7 +38,21 @@ const Header = ({ addTask, filterTasks, sortTasks }) => {
 
   return (
     <div className="header">
-      <h2>TO DO:</h2>
+      <div className="title">
+        <h2>TO DO:</h2>
+        <Switch
+          checked={theme === "dark"}
+          onChange={toggleTheme}
+          onColor="#9ba5aa"
+          onHandleColor="#4f4c4c"
+          handleDiameter={25}
+          uncheckedIcon={false}
+          checkedIcon={false}
+          height={15}
+          width={48}
+          className="react-switch"
+        />
+      </div>
       <div className="filter">
         <button className="category-filter" onClick={() => filterTasks("all")}>
           All
@@ -51,7 +68,7 @@ const Header = ({ addTask, filterTasks, sortTasks }) => {
         ))}
       </div>
       <div className="sort-add-new">
-        <select className="sort" name="sort" onChange={handleSort}>
+        <select className="select-dropdown" name="sort" onChange={handleSort}>
           <option value="">Sort By</option>
           {sortOptions.map((option, i) => (
             <option key={i} value={option.value}>
