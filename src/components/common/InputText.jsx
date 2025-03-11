@@ -10,6 +10,7 @@ const InputText = forwardRef(
       maxLength = 50,
       size = 30,
       labelText = "",
+      placeholder = "",
       value,
       onChange,
     },
@@ -38,6 +39,7 @@ const InputText = forwardRef(
           minLength={minLength}
           maxLength={maxLength}
           size={size}
+          placeholder={placeholder}
         />
       </>
     );

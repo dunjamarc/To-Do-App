@@ -46,10 +46,10 @@ function App() {
       const data = await response.json();
       if (data.length === 0) {
         setHasMoreItems(false);
+        setTasks([]);
         return;
       }
-      data.length < pageLimit ? setHasMoreItems(false) : setHasMoreItems(true);
-
+      showLoadMoreButton(data);
       setTasks((prevTasks) => (append ? [...prevTasks, ...data] : data));
       setAllTasks((prevTasks) => (append ? [...prevTasks, ...data] : data));
     } catch (error) {
@@ -126,14 +126,18 @@ function App() {
   };
 
   const applyFilter = (taskList, category) => {
-    if (category === "all") {
-      setTasks(taskList);
-    } else {
-      const filtered = taskList.filter(
-        (task) => Object.hasOwn(task, "category") && task.category === category
-      );
-      setTasks(filtered);
-    }
+    let filtered =
+      category === "all"
+        ? taskList
+        : taskList.filter(
+            (task) =>
+              Object.hasOwn(task, "category") && task.category === category
+          );
+
+    showLoadMoreButton(filtered);
+    setTasks((prev) =>
+      JSON.stringify(prev) !== JSON.stringify(filtered) ? filtered : prev
+    );
   };
 
   const filterTasks = (category) => {
@@ -158,6 +162,10 @@ function App() {
   const loadMoreItems = () => {
     setPageCounter((prev) => prev + 1);
     fetchTasks(pageCounter + 1, true, searchQuery);
+  };
+
+  const showLoadMoreButton = (list) => {
+    list.length < pageLimit ? setHasMoreItems(false) : setHasMoreItems(true);
   };
 
   return (

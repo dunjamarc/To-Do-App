@@ -82,7 +82,7 @@ const Header = ({ addTask, filterTasks, sortTasks, searchTask }) => {
           ))}
         </select>
         <div className="search-box">
-          <InputText size={25} onChange={handleSearch}/>
+          <InputText size={25} onChange={handleSearch} placeholder={"Search"}/>
           <SlMagnifier />
         </div>
         <SlPlus className="add-new" title="Add new" onClick={handleOpenModal} />
