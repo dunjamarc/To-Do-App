@@ -14,28 +14,41 @@ function App() {
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [sortBy, setSortBy] = useState("title");
   const [order, setOrder] = useState("asc");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const pageLimit = 10;
 
   useEffect(() => {
     setPageCounter(1);
-    fetchTasks(1, false);
-  }, [sortBy, order]);
+    fetchTasks(1, false, searchQuery);
+  }, [sortBy, order, searchQuery]);
 
-  const fetchTasks = async (page = 1, append = false) => {
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      setSearchQuery(searchInput);
+    }, 500);
+
+    return () => clearTimeout(delay);
+  }, [searchInput]);
+
+  const fetchTasks = async (page = 1, append = false, searchQuery = "") => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `${API_URL}?_page=${page}&_limit=10&_sort=${sortBy}&_order=${order}`
-      );
+      let url = `${API_URL}?_page=${page}&_limit=${pageLimit}&_sort=${sortBy}&_order=${order}`;
+      if (searchQuery.trim()) {
+        url += `&title_like=${encodeURIComponent(searchQuery)}`;
+      }
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Failed to fetch tasks");
       }
       const data = await response.json();
-
       if (data.length === 0) {
         setHasMoreItems(false);
         return;
       }
+      data.length < pageLimit ? setHasMoreItems(false) : setHasMoreItems(true);
 
       setTasks((prevTasks) => (append ? [...prevTasks, ...data] : data));
       setAllTasks((prevTasks) => (append ? [...prevTasks, ...data] : data));
@@ -138,9 +151,13 @@ function App() {
     setOrder(sortOrder);
   };
 
+  const searchTask = (search) => {
+    setSearchInput(search);
+  };
+
   const loadMoreItems = () => {
     setPageCounter((prev) => prev + 1);
-    fetchTasks(pageCounter + 1, true);
+    fetchTasks(pageCounter + 1, true, searchQuery);
   };
 
   return (
@@ -149,6 +166,7 @@ function App() {
         addTask={addTask}
         filterTasks={filterTasks}
         sortTasks={sortTasks}
+        searchTask={searchTask}
       ></Header>
       <ToDoList
         tasks={tasks}

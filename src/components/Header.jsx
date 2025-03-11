@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import AddNewForm from "./common/AddNewForm";
-import { SlPlus } from "react-icons/sl";
+import { SlPlus, SlMagnifier } from "react-icons/sl";
 import { useModal } from "../contexts/ModalContext";
 import { ThemeContext } from "../contexts/ThemeContext";
 import Switch from "react-switch";
+import InputText from "./common/InputText";
 
 const categories = ["Work", "Personal", "Shopping", "Other"];
 const sortOptions = [
@@ -13,7 +14,7 @@ const sortOptions = [
   { name: "Z-A", value: "title desc" },
 ];
 
-const Header = ({ addTask, filterTasks, sortTasks }) => {
+const Header = ({ addTask, filterTasks, sortTasks, searchTask }) => {
   const { openModalForm } = useModal();
   const { theme, toggleTheme } = useContext(ThemeContext);
 
@@ -35,6 +36,10 @@ const Header = ({ addTask, filterTasks, sortTasks }) => {
   const handleSort = (e) => {
     sortTasks(e.target.value);
   };
+
+  const handleSearch = (e) => {
+    searchTask(e.target.value)
+  }
 
   return (
     <div className="header">
@@ -76,6 +81,10 @@ const Header = ({ addTask, filterTasks, sortTasks }) => {
             </option>
           ))}
         </select>
+        <div className="search-box">
+          <InputText size={25} onChange={handleSearch}/>
+          <SlMagnifier />
+        </div>
         <SlPlus className="add-new" title="Add new" onClick={handleOpenModal} />
       </div>
     </div>
