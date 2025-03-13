@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import AddNewForm from "./common/AddNewForm";
 import { SlPlus, SlMagnifier } from "react-icons/sl";
+import { PiMoonThin, PiSunThin } from "react-icons/pi";
 import { useModal } from "../contexts/ModalContext";
 import { ThemeContext } from "../contexts/ThemeContext";
-import Switch from "react-switch";
 import InputText from "./common/InputText";
 
 const categories = ["Work", "Personal", "Shopping", "Other"];
@@ -38,25 +38,19 @@ const Header = ({ addTask, filterTasks, sortTasks, searchTask }) => {
   };
 
   const handleSearch = (e) => {
-    searchTask(e.target.value)
-  }
+    searchTask(e.target.value);
+  };
 
   return (
     <div className="header">
       <div className="title">
         <h2>TO DO:</h2>
-        <Switch
-          checked={theme === "dark"}
-          onChange={toggleTheme}
-          onColor="#9ba5aa"
-          onHandleColor="#4f4c4c"
-          handleDiameter={25}
-          uncheckedIcon={false}
-          checkedIcon={false}
-          height={15}
-          width={48}
-          className="react-switch"
-        />
+        {theme === "light" && (
+          <PiMoonThin className="switch-theme" onClick={toggleTheme} />
+        )}
+        {theme === "dark" && (
+          <PiSunThin className="switch-theme" onClick={toggleTheme} />
+        )}
       </div>
       <div className="filter">
         <button className="category-filter" onClick={() => filterTasks("all")}>
@@ -82,7 +76,7 @@ const Header = ({ addTask, filterTasks, sortTasks, searchTask }) => {
           ))}
         </select>
         <div className="search-box">
-          <InputText size={25} onChange={handleSearch} placeholder={"Search"}/>
+          <InputText size={25} onChange={handleSearch} placeholder={"Search"} />
           <SlMagnifier />
         </div>
         <SlPlus className="add-new" title="Add new" onClick={handleOpenModal} />

@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { ModalProvider } from "./contexts/ModalContext";
 
 const API_URL = "https://jsonplaceholder.typicode.com/todos";
+const pageLimit = 10;
 
 function App() {
   const [allTasks, setAllTasks] = useState([]);
@@ -17,7 +18,6 @@ function App() {
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const pageLimit = 10;
 
   useEffect(() => {
     setPageCounter(1);
